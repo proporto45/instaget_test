@@ -21,5 +21,4 @@ document.addEventListener('DOMContentLoaded', function () {
             instaBlock.appendChild(instaItem);
             }
     }
-
 });
