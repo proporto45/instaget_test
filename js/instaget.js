@@ -1,19 +1,18 @@
 /**
- * Created by propo on 06.12.2016.
+ * Created by proporto45 on 06.12.2016.
  */
 document.addEventListener('DOMContentLoaded', function () {
     var token = '691623.1419b97.479e4603aff24de596b1bf18891729f3',
         userid = 691623,
         num_photos = 20;
     var Grid__col, cardHeader, cardAvatar, cardAvatarPic, cardTitle, cardTitle__title, cardTitle__subtitle, cardDate, cardIcons;
-    var instaCard, instaItemParent, instaItem, instaPic, instaComment;
+    var instaCard, instaItemParent, instaItem, instaPic, instaComment, instaLike, instaLikeCount;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://api.instagram.com/v1/users/' + userid + '/media/recent/?access_token=' + token + '&count=' + num_photos, true);
     xhr.send();
     xhr.onload = function () {
         var data = JSON.parse(xhr.response);
         var instaBlock = document.getElementById('instaView');
-        console.log(data.data);
         for (var x in data.data) {
 
             Grid__col = document.createElement('div');
@@ -28,6 +27,13 @@ document.addEventListener('DOMContentLoaded', function () {
             instaItemParent.setAttribute('class', 'Card__primary-title');
 
             instaComment = document.createElement('h2');
+            instaLike = document.createElement('div');
+            instaLike.setAttribute('id', data.data[x].id);
+            instaLike.setAttribute('class', 'Card__primary-like');
+
+            instaLikeCount = document.createElement('span');
+            instaLikeCount.innerHTML = data.data[x].likes.count;
+
             instaComment.setAttribute('class', 'title');
             instaComment.innerHTML = data.data[x].caption.text;
 
@@ -39,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             cardAvatar.setAttribute('class', 'Card__avatar');
 
             cardAvatarPic = document.createElement('img');
-            cardAvatarPic.setAttribute('id', data.data[x].id);
             cardAvatarPic.src = data.data[x].user.profile_picture;
 
             cardTitle = document.createElement('div');
@@ -67,8 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
             instaCard.setAttribute('class', 'Card');
 
 
-            cardAvatar.appendChild(cardAvatarPic);
+            instaLike.appendChild(instaLikeCount);
 
+            cardAvatar.appendChild(cardAvatarPic);
 
 
             cardTitle.appendChild(cardTitle__title);
@@ -82,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             instaItem.appendChild(instaPic);
             instaItemParent.appendChild(instaItem);
+            instaItemParent.appendChild(instaLike);
             instaItemParent.appendChild(instaComment);
 
             instaCard.appendChild(cardHeader);
@@ -90,6 +97,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             instaBlock.appendChild(Grid__col);
+
         }
-    }
+        var likeButtons = document.getElementsByClassName("Card__primary-like");
+
+        var takeId = function () {
+            var id_of_post = this.getAttribute("id");
+            alert('The ID of post is ' + id_of_post);
+        };
+        for (var i = 0; i < likeButtons.length; i++) {
+            likeButtons[i].addEventListener('click', takeId, false);
+        }
+    };
+
+
 });
